@@ -20,7 +20,7 @@ jobs:
             const sender = payload.sender.login;
             const issue = payload.issue;
 
-            const ADMINS = ['dummy-account'];
+            const ADMINS = ['quack-b1'];
 
             if (ADMINS.includes(sender)) {
               console.log(`${sender} is an admin. Closure allowed.`);
@@ -75,7 +75,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number,
-                body: `@${sender} Only project admins can close top-level issues. Please move this issue to **In Review** for sign-off.`
+                body: `@${sender} Only project admins can close top-level issues. This issue has been automatically moved to **In Review** for sign-off.`
               });
             } else {
               console.log("This is a sub-issue. Closure allowed.");
