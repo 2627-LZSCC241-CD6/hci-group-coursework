@@ -20,7 +20,7 @@ jobs:
             const sender = payload.sender.login;
             const issue = payload.issue;
 
-            const ADMINS = ['quack-b1'];
+            const ADMINS = ['dummy-account'];
 
             if (ADMINS.includes(sender)) {
               console.log(`${sender} is an admin. Closure allowed.`);
