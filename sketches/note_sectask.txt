@@ -1,6 +1,0 @@
-This secondary task will show a button and a bar at the corner of the screen.
-The bar have a number range from 0 to 100. Press the button will quickly increase the number, and when the user is not pressing it, the number will slowly decrease.
-To simulate, the user must keep the arrow's number between 40~60, as a safe zone. The pressing can be done with left hand only (for right-handed users, for example. And also all designs until now base on right-handed*). To keep the arrow safe, for every press, 5~10 seconds once is recommended.
-If the arrow drop or jump to the danger zone for too long(like 5 seconds), record steps when this happen. 
-
-*For left-handed users they may change a setting to mirror the whole ui, but let's finish the program itself first before worrying about this.
