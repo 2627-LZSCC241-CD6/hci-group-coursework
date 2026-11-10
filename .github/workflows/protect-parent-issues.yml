@@ -6,7 +6,7 @@ on:
     types: [closed]
 
 permissions:
-  issues: write 
+  issues: write
 
 jobs:
   enforce-parent-closure:
@@ -27,13 +27,11 @@ jobs:
               return;
             }
 
+            // GraphQL query referencing trackedInIssues (standard task list relationships)
             const query = `
               query($owner: String!, $repo: String!, $issue_number: Int!) {
                 repository(owner: $owner, name: $repo) {
                   issue(number: $issue_number) {
-                    parentIssue {
-                      id
-                    }
                     trackedInIssues(first: 1) {
                       totalCount
                     }
@@ -41,29 +39,29 @@ jobs:
                 }
               }
             `;
-            
+
             let isSubIssue = false;
-            
+            let apiError = false;
+
             try {
               const result = await github.graphql(query, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: issue.number
               });
-              
+
               const issueData = result.repository.issue;
               
-              const hasParent = issueData.parentIssue !== null && issueData.parentIssue !== undefined;
-              const isTracked = issueData.trackedInIssues && issueData.trackedInIssues.totalCount > 0;
-              
-              isSubIssue = hasParent || isTracked;
-              
+              // An issue tracked in another issue's task list is treated as a sub-issue
+              isSubIssue = issueData && issueData.trackedInIssues && issueData.trackedInIssues.totalCount > 0;
             } catch (error) {
-              console.log("GraphQL error: ", error);
-              isSubIssue = false; 
+              console.log("GraphQL error encountered: ", error);
+              // Fail-open: if GraphQL fails, do not force-reopen to avoid locking users out
+              isSubIssue = true;
+              apiError = true;
             }
 
-            if (!isSubIssue) {
+            if (!isSubIssue && !apiError) {
               await github.rest.issues.update({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -77,6 +75,8 @@ jobs:
                 issue_number: issue.number,
                 body: `@${sender} Only project admins can close top-level issues. This issue has been automatically moved to **In Review** for sign-off.`
               });
+            } else if (apiError) {
+              console.log("Closure allowed due to GraphQL error fallback. Check workflow logs for API details.");
             } else {
               console.log("This is a sub-issue. Closure allowed.");
             }
