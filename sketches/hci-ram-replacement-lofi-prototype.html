@@ -99,7 +99,7 @@
   #cable .plug{left:0;top:-8px;width:26px;height:28px;border:2px solid var(--ink);background:#fff}
   #cable.out{transform:translateX(-34px);opacity:.4}
 
-  /* L: static popup */
+  /* L: danger */
   #stat{position:fixed;inset:0;z-index:50;background:#fff;border:3px solid var(--ink);
     display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
   #stat.hide{display:none}
@@ -239,8 +239,6 @@
 
   <div class="box" id="rings"></div>
 
-  <!-- L: static popup -->
-
   <!-- L: notice -->
   <div class="box hide" id="notice">
     <div id="nHead">
@@ -285,8 +283,8 @@
 </div>
 </div>
 
-<!-- L: static popup -->
-<div id="stat">
+<!-- L: danger -->
+<div id="stat" class="hide">
   <div class="hatch l"></div>
   <div class="hatch r"></div>
   <div id="statInner">
@@ -294,8 +292,8 @@
       <i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i><i class="w5"></i>
     </div>
     <div id="statTxt">
-      <div>Static Electricity</div>
-      <div>Warning texts</div>
+      <div>Unexpected Danger</div>
+      <div>Event Detected</div>
       <div class="r3">and confirm <button id="doneBtn">Done</button></div>
     </div>
   </div>
@@ -320,10 +318,11 @@ const STEPS=[
 const q=s=>document.querySelector(s);
 const qa=s=>Array.prototype.slice.call(document.querySelectorAll(s));
 
-let cur=0,armed=false,finished=false,t0=0,tid=null;
+let cur=0,armed=true,finished=false,t0=0,tid=null;
 let missN=0,wrongN=0;
 const missSet={},wrongSet={};
 let val=50,pressing=false,dangerT=0,dangerLock=false;
+let dangerStep=6+Math.floor(Math.random()*5),dangerUp=false,dangerFired=false;
 
 /* li */
 function buildList(){
@@ -419,20 +418,39 @@ function advance(){
   cur++;
   if(cur>=STEPS.length){finish();return;}
   render();
+  if(!dangerFired&&STEPS[cur].n===dangerStep) fireDanger();
+}
+
+/* danger */
+function fireDanger(){
+  dangerFired=true;
+  dangerUp=true;
+  q("#stat").classList.remove("hide");
 }
 
 function finish(){
   finished=true;
   armed=false;
+  dangerUp=false;
+  q("#stat").classList.add("hide");
   clearInterval(tid);
   render();
+}
+
+/* clock */
+function startClock(){
+  if(tid) return;
+  t0=Date.now();
+  tid=setInterval(paintClock,200);
+  paintClock();
 }
 
 /* click */
 q("#case").addEventListener("click",e=>{
   const el=e.target.closest("[data-part]");
   if(!el) return;
-  if(!armed||finished) return;
+  if(!armed||finished||dangerUp) return;
+  startClock();
   const p=el.dataset.part;
   if(p===STEPS[cur].p){
     if(p==="screw"){
@@ -479,7 +497,7 @@ function paintGauge(out){
   q("#gauge").classList.toggle("danger",!!out);
 }
 setInterval(()=>{
-  if(!armed||finished){paintGauge(false);return;}
+  if(!armed||finished||dangerUp){paintGauge(false);return;}
   val+=pressing?4.2:-0.32;
   if(val>100)val=100;
   if(val<0)val=0;
@@ -530,13 +548,8 @@ q("#nOk").addEventListener("click",hideNotice);
 
 /* start */
 q("#doneBtn").addEventListener("click",()=>{
-  if(armed||finished) return;
-  armed=true;
+  dangerUp=false;
   q("#stat").classList.add("hide");
-  t0=Date.now();
-  tid=setInterval(paintClock,200);
-  paintClock();
-  render();
 });
 
 /* hatch */
