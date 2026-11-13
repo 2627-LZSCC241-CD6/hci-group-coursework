@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>RAM Replacement — Lo-fi Test Prototype</title>
+<style>
+  :root{
+    --bl:#1CA7E0;
+    --rd:#E01B22;
+    --or:#F08519;
+    --ink:#111111;
+    --mut:#8d939a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:#eceef0;
+    font-family:"Segoe UI",Arial,"Helvetica Neue",sans-serif;color:var(--ink);
+    -webkit-font-smoothing:antialiased;user-select:none}
+  #wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+  #stage{position:relative;flex:none;width:1600px;height:900px;background:#fff;
+    transform-origin:center center;box-shadow:0 0 0 1px #d5d8db}
+  .box{position:absolute}
+  .part{cursor:pointer}
+  .part:hover{outline:2px solid rgba(28,167,224,.45)}
+  .bad{background:#ffe3e3 !important}
+
+  /* L: steps */
+  #stepsPanel{left:62px;top:125px;width:271px;height:465px}
+  #sTitle{font-size:26px;font-weight:700;letter-spacing:4px;color:var(--bl);
+    padding-bottom:9px;border-bottom:3px solid var(--bl)}
+  #sList{list-style:none;margin:9px 0 0;padding:0}
+  #sList li{display:flex;align-items:center;height:27px;font-size:15px;color:#5a5f65}
+  #sList li .num{width:24px;color:var(--bl);font-weight:600;font-size:15px}
+  #sList li .ln{flex:1;height:0;border-bottom:2px solid rgba(28,167,224,.45);margin:0 9px}
+  #sList li .cb{width:19px;height:19px;border:2px solid var(--bl);background:#fff;
+    position:relative;flex:none}
+  #sList li.done .cb{background:var(--bl)}
+  #sList li.done .cb::after{content:"\2713";position:absolute;inset:0;color:#fff;font-size:12px;
+    line-height:15px;text-align:center;font-weight:700}
+  #sList li.cur{color:var(--ink);font-weight:700}
+  #sList li.cur .num{color:var(--ink)}
+  #readout{position:absolute;left:0;bottom:2px;font:15px/1.75 Consolas,"Courier New",monospace;
+    color:#3a3f45}
+  #readout u{text-decoration:none;color:var(--bl);font-weight:700}
+
+  /* L: callout */
+  #callout{left:454px;top:30px;width:608px;height:116px;border:3px solid var(--bl);background:#fff}
+  #tab{position:absolute;left:-3px;top:-30px;width:116px;height:30px;border:3px solid var(--bl);
+    border-bottom:none;background:#fff;color:var(--bl);font-size:14px;font-weight:700;
+    letter-spacing:2px;text-align:center;line-height:25px}
+  #cText{position:absolute;inset:0;padding:10px 17px;color:var(--bl);font-size:21px;
+    font-weight:700;line-height:1.32}
+
+  /* L: case */
+  #case{left:414px;top:164px;width:684px;height:476px;border:3px solid var(--ink);background:#fff}
+  #case::before{content:"";position:absolute;inset:7px;border:1px solid var(--ink);pointer-events:none}
+  #mb{left:102px;top:104px;width:238px;height:125px;border:2px solid var(--ink);background:#fbfbfb}
+  #mb::after{content:"";position:absolute;inset:9px;border:1px solid #d8d8d8}
+  #shroud{left:73px;top:340px;width:325px;height:21px;border:2px solid var(--ink)}
+  #bay{left:512px;top:323px;width:148px;height:46px;border:2px solid var(--ink)}
+  #chan{left:46px;top:50px;width:7px;height:300px;background:var(--ink)}
+  .slot{border:2px solid var(--ink);background:#fff}
+  #slot1{left:361px;top:27px;width:37px;height:271px}
+  #slot2{left:431px;top:27px;width:37px;height:271px}
+  .clip{width:49px;height:30px;border:2px solid var(--ink);background:#fff;left:-6px}
+  .clip.t{top:-26px}
+  .clip.b{top:263px}
+  .clip.open{background:#dde5ea;border-color:var(--bl)}
+  .clip.lock{border-color:var(--rd)}
+  #ramOld,#ramNew{left:13px;top:16px;width:12px;height:240px;border:2px solid var(--ink);background:#dedede}
+  #ramNew{display:none;background:#c3cfd6}
+
+  /* L: glass */
+  #glass{left:0;top:0;width:100%;height:100%;border:1px solid #c9ced3;background:transparent;
+    transition:transform .5s ease,opacity .3s ease;transform-origin:0 0}
+  #glass.removed{transform:translate(686px,300px) scale(.34)}
+  #glass .stripes{left:0;top:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
+  #glass .st{position:absolute;height:3px;width:150%;left:-25%;background:var(--ink);
+    transform:rotate(-33deg)}
+  .screw{width:26px;height:26px;border:2px solid var(--ink);background:#fff}
+  .screw::after{content:"+";position:absolute;inset:0;text-align:center;line-height:22px;
+    font-size:17px;color:var(--ink)}
+  .screw.s1{left:-13px;top:-13px}
+  .screw.s2{right:-13px;top:-13px}
+  .screw.s3{left:-13px;bottom:-13px}
+  .screw.s4{right:-13px;bottom:-13px}
+  .screw.out{background:var(--bl);border-color:var(--bl)}
+  .screw.out::after{content:"\2713";color:#fff;font-size:13px;line-height:20px}
+
+  /* L: rings */
+  #rings{left:0;top:0;width:100%;height:100%;pointer-events:none}
+  #rings .ring{position:absolute;pointer-events:none;border:5px solid var(--bl);
+    animation:rp 1.15s ease-in-out infinite}
+  #rings .ring.circle{border-radius:50%}
+  @keyframes rp{0%,100%{opacity:1}50%{opacity:.4}}
+
+  /* L: cable */
+  #cable{left:-72px;top:279px;width:82px;height:12px;background:var(--ink);
+    transition:transform .35s,opacity .35s}
+  #cable .plug{left:0;top:-8px;width:26px;height:28px;border:2px solid var(--ink);background:#fff}
+  #cable.out{transform:translateX(-34px);opacity:.4}
+
+  /* L: danger */
+  #stat{position:fixed;inset:0;z-index:50;background:#fff;border:3px solid var(--ink);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px}
+  #stat.hide{display:none}
+  .hatch{position:absolute;top:0;bottom:0;width:78px;overflow:hidden}
+  .hatch.l{left:9px}
+  .hatch.r{right:9px}
+  .hatch i{position:absolute;left:-22px;width:120px;height:5px;background:var(--rd);
+    transform:rotate(52deg)}
+  #statInner{display:flex;align-items:center;gap:22px;border:5px solid var(--rd);
+    padding:44px 62px;background:#fff;max-width:min(88vw,1200px)}
+  #warnIcon{position:relative;width:48px;height:44px;flex:none;transform:scale(2.1);
+    margin:0 34px 0 10px}
+  #warnIcon i{position:absolute;background:var(--rd)}
+  #warnIcon .w1{left:1px;bottom:4px;width:42px;height:3px;transform:rotate(-58deg);
+    transform-origin:left center}
+  #warnIcon .w2{right:1px;bottom:4px;width:42px;height:3px;transform:rotate(58deg);
+    transform-origin:right center}
+  #warnIcon .w3{left:2px;bottom:4px;width:44px;height:3px}
+  #warnIcon .w4{left:22px;top:14px;width:4px;height:14px}
+  #warnIcon .w5{left:22px;top:31px;width:4px;height:4px}
+  #statTxt{color:var(--rd);font-size:37px;font-weight:700;line-height:1.5}
+  #statTxt .r3{display:flex;align-items:center;gap:18px}
+  #doneBtn{width:158px;height:54px;border:5px solid var(--rd);background:#fff;color:var(--rd);
+    font:700 23px "Segoe UI",Arial;letter-spacing:1px;cursor:pointer;padding:0}
+  #statFoot{color:var(--rd);font-size:29px;font-weight:600;letter-spacing:.5px}
+
+  /* L: notice */
+  #notice{left:1117px;top:646px;width:458px;height:196px;border:3px solid var(--or);background:#fff}
+  #notice.hide{display:none}
+  #nHead{display:flex;align-items:center;height:52px;padding-left:14px}
+  #notice .warnIcon2{position:relative;width:38px;height:36px;flex:none;margin-right:10px}
+  #notice .warnIcon2 i{position:absolute;background:var(--or)}
+  #notice .warnIcon2 .w1{left:1px;bottom:3px;width:33px;height:3px;transform:rotate(-58deg);
+    transform-origin:left center}
+  #notice .warnIcon2 .w2{right:1px;bottom:3px;width:33px;height:3px;transform:rotate(58deg);
+    transform-origin:right center}
+  #notice .warnIcon2 .w3{left:1px;bottom:3px;width:35px;height:3px}
+  #notice .warnIcon2 .w4{left:17px;top:11px;width:3px;height:12px}
+  #notice .warnIcon2 .w5{left:17px;top:26px;width:3px;height:3px}
+  #nTitle{color:var(--or);font-size:25px;font-weight:700;letter-spacing:1px}
+  #nLine{position:absolute;left:14px;right:14px;top:52px;height:3px;background:var(--or)}
+  #nText{position:absolute;left:16px;top:66px;width:420px;color:var(--or);font-size:18px;
+    font-weight:600;line-height:1.45}
+  #nFoot{position:absolute;right:14px;bottom:10px;display:flex;flex-direction:column;
+    align-items:flex-end;gap:4px;color:var(--or);font-size:14px}
+  #nOk{width:96px;height:31px;border:3px solid var(--or);background:#fff;color:var(--or);
+    font:700 15px "Segoe UI",Arial;letter-spacing:1px;cursor:pointer;padding:0}
+
+  /* L: secondary task */
+  #sec{left:79px;top:654px;width:265px;height:192px}
+  #secBtn{left:4px;top:14px;width:118px;height:118px;border:3px solid var(--ink);background:#fff;
+    padding:0;cursor:pointer}
+  #secBtn .pad{left:28px;top:28px;width:58px;height:58px;background:#2fbf5e;
+    transition:transform .06s,background .06s}
+  #secBtn.on .pad{background:#1c8c44;transform:scale(.88)}
+  #secHint{left:0;top:138px;width:126px;text-align:center;font-size:11px;letter-spacing:1px;
+    color:var(--mut)}
+  #gauge{left:176px;top:8px;width:84px;height:180px}
+  #gval{left:0;top:0;font:700 15px Consolas,monospace;color:#3a3f45}
+  #track{left:14px;top:20px;width:36px;height:150px;border:2px solid var(--ink);background:#fff;
+    overflow:visible}
+  #fill{left:0;bottom:0;width:100%;background:var(--rd)}
+  #segs{left:0;top:0;width:100%;height:100%;pointer-events:none}
+  #segs i{left:0;width:100%;height:2px;background:#fff}
+  #safeBand{left:-8px;width:46px;bottom:40%;height:20%;border-top:2px dashed var(--bl);
+    border-bottom:2px dashed var(--bl);background:rgba(28,167,224,.12);pointer-events:none}
+  #ptr{left:-6px;width:44px;height:5px;background:var(--rd);pointer-events:none;
+    box-shadow:0 0 0 1px #fff}
+  .gk{position:absolute;left:62px;font:11px Consolas,monospace;color:var(--mut)}
+  #gauge.danger #fill{background:#a80f16}
+  #gauge.danger #gval{color:var(--rd)}
+
+  /* L: footer */
+  #foot{left:0;bottom:14px;width:100%;text-align:center;font-size:13px;color:var(--mut);
+    letter-spacing:.4px}
+</style>
+</head>
+<body>
+<div id="wrap">
+<div id="stage">
+
+  <!-- L: steps -->
+  <div class="box" id="stepsPanel">
+    <div id="sTitle">STEPS</div>
+    <ul id="sList"></ul>
+    <div id="readout">
+      <div>time: <u id="rTime">00:00</u></div>
+      <div>miss: <u id="rMiss">0</u></div>
+      <div>wrongstep: <u id="rWrong">0</u></div>
+    </div>
+  </div>
+
+  <!-- L: callout -->
+  <div class="box" id="callout">
+    <div id="tab">STEP 1</div>
+    <div id="cText"></div>
+  </div>
+
+  <!-- L: case -->
+  <div class="box" id="case">
+    <div class="box part" id="mb" data-part="decor"></div>
+    <div class="box part" id="shroud" data-part="decor"></div>
+    <div class="box part" id="bay" data-part="decor"></div>
+    <div class="box" id="chan"></div>
+
+    <div class="box part slot" id="slot1" data-part="slot">
+      <div class="box part clip t" data-part="topClip"></div>
+      <div class="box part" id="ramOld" data-part="oldRam"></div>
+      <div class="box" id="ramNew"></div>
+      <div class="box part clip b" data-part="bottomClip"></div>
+    </div>
+
+    <div class="box slot" id="slot2" data-part="decor">
+      <div class="box clip t" data-part="decor"></div>
+      <div class="box clip b" data-part="decor"></div>
+    </div>
+
+    <div class="box part" id="glass" data-part="glass">
+      <div class="box stripes">
+        <i class="st" style="top:62px"></i>
+        <i class="st" style="top:132px"></i>
+        <i class="st" style="top:202px"></i>
+        <i class="st" style="top:272px"></i>
+        <i class="st" style="top:342px"></i>
+        <i class="st" style="top:412px"></i>
+      </div>
+      <div class="box part screw s1" data-part="screw"></div>
+      <div class="box part screw s2" data-part="screw"></div>
+      <div class="box part screw s3" data-part="screw"></div>
+      <div class="box part screw s4" data-part="screw"></div>
+    </div>
+
+    <div class="box part" id="cable" data-part="powerCable">
+      <div class="box plug"></div>
+    </div>
+  </div>
+
+  <div class="box" id="rings"></div>
+
+  <!-- L: notice -->
+  <div class="box hide" id="notice">
+    <div id="nHead">
+      <div class="warnIcon2">
+        <i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i><i class="w5"></i>
+      </div>
+      <div id="nTitle">Notice</div>
+    </div>
+    <div id="nLine"></div>
+    <div id="nText">(Will show a notice at the corner if steps are wrong.)</div>
+    <div id="nFoot">
+      <span>(expires in <b id="nSec">10</b> seconds)</span>
+      <button id="nOk">Confirm</button>
+    </div>
+  </div>
+
+  <!-- L: secondary task -->
+  <div class="box" id="sec">
+    <button class="box" id="secBtn"><span class="box pad"></span></button>
+    <div class="box" id="secHint">PRESS / SPACE</div>
+    <div class="box" id="gauge">
+      <div class="box" id="gval">50</div>
+      <div class="box" id="track">
+        <div class="box" id="fill" style="height:50%"></div>
+        <div class="box" id="segs">
+          <i style="top:15px"></i><i style="top:30px"></i><i style="top:45px"></i>
+          <i style="top:60px"></i><i style="top:75px"></i><i style="top:90px"></i>
+          <i style="top:105px"></i><i style="top:120px"></i><i style="top:135px"></i>
+        </div>
+        <div class="box" id="safeBand"></div>
+        <div class="box" id="ptr" style="bottom:50%"></div>
+      </div>
+      <span class="gk" style="top:16px">100</span>
+      <span class="gk" style="top:74px">60</span>
+      <span class="gk" style="top:104px">40</span>
+      <span class="gk" style="top:164px">0</span>
+    </div>
+  </div>
+
+  <div class="box" id="foot">This low-fidelity test prototype webpage was generated by DeepSeek.</div>
+
+</div>
+</div>
+
+<!-- L: danger -->
+<div id="stat" class="hide">
+  <div class="hatch l"></div>
+  <div class="hatch r"></div>
+  <div id="statInner">
+    <div id="warnIcon">
+      <i class="w1"></i><i class="w2"></i><i class="w3"></i><i class="w4"></i><i class="w5"></i>
+    </div>
+    <div id="statTxt">
+      <div>Unexpected Danger</div>
+      <div>Event Detected</div>
+      <div class="r3">and confirm <button id="doneBtn">Done</button></div>
+    </div>
+  </div>
+  <div id="statFoot">Please confirm before next step</div>
+</div>
+
+<script>
+/* st */
+const STEPS=[
+  {n:1,t:"Unplug the power cable from the back of the computer case.",p:"powerCable"},
+  {n:2,t:"Unscrew the four screws on each corner of the glass side panel to unlock the side panel",p:"screw"},
+  {n:3,t:"Lift the glass side panel to remove it and expose the motherboard",p:"glass"},
+  {n:4,t:"Click the top plastic clip on the RAM slot to release the stick.",p:"topClip"},
+  {n:5,t:"Click the bottom plastic clip on the RAM slot to fully release the stick.",p:"bottomClip"},
+  {n:6,t:"Click the old RAM stick to pull it out of the slot;",p:"oldRam"},
+  {n:7,t:"Click the RAM slot to place a new memory stick in the slot;",p:"slot"},
+  {n:8,t:"Click the top plastic clip on the RAM slot to lock the new memory stick;",p:"topClip"},
+  {n:9,t:"Click the bottom plastic clip on the RAM slot to lock the new memory stick;",p:"bottomClip"},
+  {n:10,t:"Click the glass side panel back into place and screw it in",p:"glass"}
+];
+
+const q=s=>document.querySelector(s);
+const qa=s=>Array.prototype.slice.call(document.querySelectorAll(s));
+
+let cur=0,armed=true,finished=false,t0=0,tid=null;
+let missN=0,wrongN=0;
+const missSet={},wrongSet={};
+let val=50,pressing=false,dangerT=0,dangerLock=false;
+let dangerStep=6+Math.floor(Math.random()*5),dangerUp=false,dangerFired=false;
+
+/* li */
+function buildList(){
+  const ul=q("#sList");
+  STEPS.forEach((s,i)=>{
+    const li=document.createElement("li");
+    li.dataset.i=i;
+    li.innerHTML='<span class="num">'+s.n+'.</span><span class="ln"></span><span class="cb"></span>';
+    ul.appendChild(li);
+  });
+}
+
+/* render */
+function render(){
+  if(finished){
+    q("#tab").textContent="DONE";
+    q("#cText").textContent="Task complete.";
+  }else{
+    const s=STEPS[cur];
+    q("#tab").textContent="STEP "+s.n;
+    q("#cText").textContent=s.t;
+  }
+  qa("#sList li").forEach(li=>{
+    const i=+li.dataset.i;
+    li.classList.toggle("done",i<cur);
+    li.classList.toggle("cur",i===cur&&!finished);
+  });
+  hint();
+}
+
+/* hint */
+const RING={
+  powerCable:{mode:"circle",size:74,anchor:"right"},
+  screw:{mode:"circle",pad:11},
+  glass:{mode:"box",pad:4},
+  topClip:{mode:"circle",pad:9},
+  bottomClip:{mode:"circle",pad:9},
+  oldRam:{mode:"box",pad:8},
+  slot:{mode:"box",pad:7}
+};
+
+function ringAt(box,rect,spec){
+  const el=document.createElement("div");
+  el.className="ring "+spec.mode;
+  if(spec.mode==="circle"){
+    const L=spec.size||Math.max(rect.w,rect.h)+spec.pad*2;
+    const cx=(spec.anchor==="right")?rect.x+rect.w-12:rect.x+rect.w/2;
+    const cy=rect.y+rect.h/2;
+    el.style.left=(cx-L/2)+"px";
+    el.style.top=(cy-L/2)+"px";
+    el.style.width=L+"px";
+    el.style.height=L+"px";
+  }else{
+    el.style.left=(rect.x-spec.pad)+"px";
+    el.style.top=(rect.y-spec.pad)+"px";
+    el.style.width=(rect.w+spec.pad*2)+"px";
+    el.style.height=(rect.h+spec.pad*2)+"px";
+  }
+  box.appendChild(el);
+}
+
+function hint(){
+  const box=q("#rings");
+  box.innerHTML="";
+  if(!armed||finished) return;
+  const p=STEPS[cur].p, spec=RING[p];
+  if(!spec) return;
+  const ts=(p==="screw")?qa(".screw:not(.out)"):qa('[data-part="'+p+'"]');
+  const sr=q("#stage").getBoundingClientRect(), k=sr.width/1600;
+  ts.forEach(t=>{
+    const r=t.getBoundingClientRect();
+    ringAt(box,{x:(r.left-sr.left)/k,y:(r.top-sr.top)/k,w:r.width/k,h:r.height/k},spec);
+  });
+}
+
+/* effect */
+function effect(p){
+  if(p==="powerCable") q("#cable").classList.add("out");
+  if(p==="glass"){
+    const g=q("#glass");
+    if(cur===2) g.classList.add("removed"); else g.classList.remove("removed");
+  }
+  if(cur===3) qa('[data-part="topClip"]')[0].classList.add("open");
+  if(cur===4) qa('[data-part="bottomClip"]')[0].classList.add("open");
+  if(cur===7) qa('[data-part="topClip"]')[0].classList.add("lock");
+  if(cur===8) qa('[data-part="bottomClip"]')[0].classList.add("lock");
+  if(p==="oldRam") q("#ramOld").style.display="none";
+  if(p==="slot") q("#ramNew").style.display="block";
+}
+
+/* advance */
+function advance(){
+  cur++;
+  if(cur>=STEPS.length){finish();return;}
+  render();
+  if(!dangerFired&&STEPS[cur].n===dangerStep) fireDanger();
+}
+
+/* danger */
+function fireDanger(){
+  dangerFired=true;
+  dangerUp=true;
+  q("#stat").classList.remove("hide");
+}
+
+function finish(){
+  finished=true;
+  armed=false;
+  dangerUp=false;
+  q("#stat").classList.add("hide");
+  clearInterval(tid);
+  render();
+}
+
+/* clock */
+function startClock(){
+  if(tid) return;
+  t0=Date.now();
+  tid=setInterval(paintClock,200);
+  paintClock();
+}
+
+/* click */
+q("#case").addEventListener("click",e=>{
+  const el=e.target.closest("[data-part]");
+  if(!el) return;
+  if(!armed||finished||dangerUp) return;
+  startClock();
+  const p=el.dataset.part;
+  if(p===STEPS[cur].p){
+    if(p==="screw"){
+      el.classList.add("out");
+      if(qa(".screw.out").length===4) advance(); else hint();
+      return;
+    }
+    effect(p);
+    advance();
+  }else{
+    wrongN++;
+    wrongSet[STEPS[cur].n]=1;
+    paintWrong();
+    el.classList.add("bad");
+    setTimeout(()=>el.classList.remove("bad"),450);
+    showNotice();
+  }
+});
+
+/* readouts */
+function stepList(set){
+  const k=Object.keys(set).sort((a,b)=>a-b);
+  return k.length?(" (step "+k.join(", ")+")"):"";
+}
+function paintWrong(){
+  q("#rWrong").textContent=wrongN+stepList(wrongSet);
+}
+function paintMiss(){
+  q("#rMiss").textContent=missN+stepList(missSet);
+}
+
+/* clock */
+function paintClock(){
+  const s=Math.floor((Date.now()-t0)/1000);
+  q("#rTime").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+}
+
+/* gauge */
+function paintGauge(out){
+  const v=Math.round(val);
+  q("#gval").textContent=v;
+  q("#fill").style.height=val+"%";
+  q("#ptr").style.bottom=val+"%";
+  q("#gauge").classList.toggle("danger",!!out);
+}
+setInterval(()=>{
+  if(!armed||finished||dangerUp){paintGauge(false);return;}
+  val+=pressing?4.2:-0.32;
+  if(val>100)val=100;
+  if(val<0)val=0;
+  const out=(val<40||val>60);
+  if(out){
+    dangerT+=0.1;
+    if(dangerT>=5&&!dangerLock){
+      dangerLock=true;
+      missN++;
+      missSet[STEPS[cur].n]=1;
+      paintMiss();
+    }
+  }else{dangerT=0;dangerLock=false;}
+  paintGauge(out);
+},100);
+
+/* press */
+const btn=q("#secBtn");
+function down(e){e.preventDefault();pressing=true;btn.classList.add("on");}
+function up(){pressing=false;btn.classList.remove("on");}
+btn.addEventListener("mousedown",down);
+btn.addEventListener("touchstart",down,{passive:false});
+window.addEventListener("mouseup",up);
+window.addEventListener("touchend",up);
+btn.addEventListener("mouseleave",up);
+window.addEventListener("keydown",e=>{
+  if(e.code==="Space"||e.key===" "){e.preventDefault();down(e);}
+});
+window.addEventListener("keyup",e=>{
+  if(e.code==="Space"||e.key===" "){e.preventDefault();up();}
+});
+
+/* notice */
+let nid=null;
+function showNotice(){
+  q("#notice").classList.remove("hide");
+  let left=10;
+  q("#nSec").textContent=left;
+  clearInterval(nid);
+  nid=setInterval(()=>{
+    left--;
+    q("#nSec").textContent=left;
+    if(left<=0) hideNotice();
+  },1000);
+}
+function hideNotice(){clearInterval(nid);q("#notice").classList.add("hide");}
+q("#nOk").addEventListener("click",hideNotice);
+
+/* start */
+q("#doneBtn").addEventListener("click",()=>{
+  dangerUp=false;
+  q("#stat").classList.add("hide");
+});
+
+/* hatch */
+function hatchFill(){
+  const n=Math.ceil(window.innerHeight/34)+3;
+  qa(".hatch").forEach(h=>{
+    h.innerHTML="";
+    for(let i=0;i<n;i++){
+      const b=document.createElement("i");
+      b.style.top=(i*34-26)+"px";
+      h.appendChild(b);
+    }
+  });
+}
+
+/* fit */
+function fit(){
+  const k=Math.min(window.innerWidth/1600,window.innerHeight/900);
+  q("#stage").style.transform="scale("+k+")";
+  hatchFill();
+  hint();
+}
+window.addEventListener("resize",fit);
+
+buildList();
+fit();
+render();
+paintGauge(false);
+</script>
+</body>
+</html>
