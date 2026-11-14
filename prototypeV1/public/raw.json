@@ -1,0 +1,127 @@
+{
+  "title": "Replace RAM in a PC",
+  "steps": [
+    {
+      "id": 1,
+      "text": "Unplug the power cable from the back of the computer case.",
+      "target": "power-cable",
+      "hazard": true,
+      "polygons": [
+        "0,1725 100,1725 100,1825 0,1825"
+      ],
+      "image": "full_case.jpg"
+    },
+    {
+      "id": 2,
+      "text": "Unscrew the four screws at the corners of the glass side panel.",
+      "target": "side-panel-screws",
+      "hazard": false,
+      "polygons": [
+        "100,50 200,50 200,150 100,150",
+        "1741,50 1841,50 1841,150 1741,150",
+        "100,1872 200,1872 200,1972 100,1972",
+        "1741,1872 1841,1872 1841,1972 1741,1972"
+      ],
+      "image": "power_removed.jpg"
+    },
+    {
+      "id": 3,
+      "text": "Lift off the glass side panel to expose the motherboard.",
+      "target": "side-panel",
+      "hazard": false,
+      "polygons": [
+        "100,3 1841,3 1841,1987 100,1987"
+      ],
+      "image": "screws_removed.jpg"
+    },
+    {
+      "id": 4,
+      "text": "Press the top plastic clips on the RAM slot to unlock the memory stick.",
+      "target": "ram-top-clip",
+      "hazard": false,
+      "polygons": [
+        "945,375 995,375 995,425 945,425",
+        "1010,375 1060,375 1060,425 1010,425"
+      ],
+      "image": "panel_removed.jpg"
+    },
+    {
+      "id": 5,
+      "text": "Press the bottom plastic clips on the RAM slot to fully release the stick.",
+      "target": "ram-bottom-clip",
+      "hazard": false,
+      "polygons": [
+        "945,900 995,900 995,950 945,950",
+        "1010,900 1060,900 1060,950 1010,950"
+      ],
+      "image": "panel_removed.jpg"
+    },
+    {
+      "id": 6,
+      "text": "Click the old RAM sticks to remove them from the slot.",
+      "target": "old-ram-stick",
+      "hazard": false,
+      "polygons": [
+        "945,375 995,375 995,950 945,950",
+        "1010,375 1060,375 1060,950 1010,950"
+      ],
+      "image": "panel_removed.jpg"
+    },
+    {
+      "id": 7,
+      "text": "Click the RAM slots to place a new memory stick in the slot.",
+      "target": "ram-slot",
+      "hazard": false,
+      "polygons": [
+        "945,375 995,375 995,950 945,950",
+        "1010,375 1060,375 1060,950 1010,950"
+      ],
+      "image": "no_ram.jpg"
+    },
+    {
+      "id": 8,
+      "text": "Press the top plastic clips on the RAM slot to lock the new memory stick.",
+      "target": "ram-top-clip",
+      "hazard": false,
+      "polygons": [
+        "945,375 995,375 995,425 945,425",
+        "1010,375 1060,375 1060,425 1010,425"
+      ],
+      "image": "panel_removed.jpg"
+    },
+    {
+      "id": 9,
+      "text": "Press the bottom plastic clips on the RAM slot to fully lock the new memory stick.",
+      "target": "ram-bottom-clip",
+      "hazard": false,
+      "polygons": [
+        "945,900 995,900 995,950 945,950",
+        "1010,900 1060,900 1060,950 1010,950"
+      ],
+      "image": "panel_removed.jpg"
+    },
+    {
+      "id": 10,
+      "text": "Click the glass side panel back into place.",
+      "target": "side-panel-screws",
+      "hazard": false,
+      "polygons": [
+        "100,3 1841,3 1841,1987 100,1987"
+      ],
+      "image": "screws_removed.jpg"
+    },
+    {
+      "id": 11,
+      "text": "Screw the four screws at the corners of the glass side panel.",
+      "target": "side-panel-screws",
+      "hazard": false,
+      "polygons": [
+        "100,50 200,50 200,150 100,150",
+        "1741,50 1841,50 1841,150 1741,150",
+        "100,1872 200,1872 200,1972 100,1972",
+        "1741,1872 1841,1872 1841,1972 1741,1972"
+      ],
+      "image": "screws_removed.jpg"
+    }
+  ]
+}
