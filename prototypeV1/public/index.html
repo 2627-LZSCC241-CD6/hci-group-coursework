@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Step at a Time</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>One Step at a Time</h1>
+    <p>Guided maintenance task prototype</p>
+  </header>
+
+  <main>
+    <!-- Machine photo with the SVG overlay on top.
+         The prototype uses up to 7 photos: app.js swaps the photo for
+         each step according to the "image" field in raw.json (fallback:
+         DEFAULT_IMAGE in app.js). The viewBox is a fallback only — app.js
+         replaces it with the real size of the current photo, so the
+         clickable zones always stay aligned with the picture. -->
+    <div class="task-area">
+      <img
+        id="machine"
+        src="images/full_case.jpg"
+        alt="Open PC case"
+      />
+
+      <svg
+        id="overlay"
+        viewBox="0 0 2016 2112"
+        preserveAspectRatio="none"
+      >
+        <!-- Red polygon marking the part the current step targets -->
+        <polygon id="highlight" points="" />
+        <!-- Clickable zones, one polygon per step (created by app.js) -->
+        <g id="clickAreas"></g>
+      </svg>
+    </div>
+
+    <!-- Current instruction (hazard steps get the .hazard style)
+         and a status line (step counter, errors, pause state) -->
+    <section class="instruction-panel">
+      <p id="instruction">Press Start to begin.</p>
+      <p id="feedback"></p>
+    </section>
+
+    <section class="controls">
+      <button id="startBtn">Start</button>
+      <button id="backBtn">Back</button>
+      <button id="pauseBtn">Pause</button>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
