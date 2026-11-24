@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Step at a Time</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="workspace" class="workspace">
+  <header>
+    <h1>One Step at a Time</h1>
+    <p>Guided maintenance task prototype</p>
+    <section id="taskListPanel" class="task-list-panel" aria-labelledby="taskListTitle" hidden>
+      <h2 id="taskListTitle">Task list</h2>
+      <p id="taskListProgress" role="status" aria-live="polite"></p>
+      <ol id="taskList" class="task-list"></ol>
+    </section>
+  </header>
+
+  <main>
+    <!-- Each substep has its own photo and SVG target areas. -->
+    <div class="task-area">
+      <img
+        id="machine"
+        src="images/full_case.jpg"
+        alt="Open PC case"
+        draggable="false"
+      />
+
+      <svg
+        id="overlay"
+        viewBox="0 0 2016 2112"
+        preserveAspectRatio="none"
+      >
+        <!-- Areas are rebuilt on each substep transition. -->
+        <g id="clickAreas"></g>
+      </svg>
+    </div>
+
+    <!-- Current instruction (hazard steps get the .hazard style)
+         and a status line (step counter, errors, pause state) -->
+    <section class="instruction-panel">
+      <p id="instruction">Press Start to begin.</p>
+      <p id="feedback"></p>
+    </section>
+
+    <section class="controls">
+      <button id="startBtn" disabled>Start</button>
+      <button id="backBtn">Back</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="exportBtn" disabled>Export log</button>
+    </section>
+  </main>
+
+  <div id="errorWarning" class="error-warning" role="alert" aria-atomic="true" hidden></div>
+
+  <aside id="secondaryPanel" class="secondary-panel" aria-labelledby="secondaryTitle">
+    <h2 id="secondaryTitle">Secondary task</h2>
+    <p>Keep the level between 40 and 60</p>
+    <div class="meter-row">
+      <div class="meter-labels"><span>100</span><span>60</span><span>40</span><span>0</span></div>
+      <div id="secondaryMeter" class="meter" role="meter" aria-label="Secondary task level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <div class="safe-zone"></div><div id="secondaryPointer" class="meter-pointer"></div>
+      </div>
+      <output id="secondaryValue">50.0</output>
+    </div>
+    <button id="secondaryBtn" type="button" aria-keyshortcuts="Space" disabled>SPACE — Raise level</button>
+    <p>One press = one increase</p><p id="secondaryStatus" role="status">Stopped</p>
+  </aside>
+  </div>
+  <dialog id="hazardDialog" aria-labelledby="hazardTitle" aria-describedby="hazardText">
+    <h2 id="hazardTitle">Safety warning</h2>
+    <p id="hazardText"></p>
+    <button id="hazardDone" type="button">Done</button>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
