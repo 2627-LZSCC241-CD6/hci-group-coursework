@@ -1,0 +1,292 @@
+{
+  "id": "gpu",
+  "title": "Replace graphics card in a PC",
+  "imagesDir": "images/",
+  "defaultImage": "full_case.jpg",
+  "completionImage": "power_removed.jpg",
+  "steps": [
+    {
+      "id": 1,
+      "title": "Unplug the power cable from the back of the computer case.",
+      "substeps": [
+        {
+          "text": "Unplug the power cable from the back of the computer case.",
+          "target": "power-cable",
+          "partName": "power cable",
+          "hazard": true,
+          "hazardText": "Static electricity risk. Confirm that precautions are taken.",
+          "polygons": [
+            "0,1725 100,1725 100,1825 0,1825"
+          ],
+          "image": "full_case.jpg"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Unscrew the four screws at the corners of the glass side panel.",
+      "substeps": [
+        {
+          "text": "Unscrew the top-left screw (1 of 4).",
+          "target": "side-panel-screw-top-left",
+          "partName": "top-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,50 200,50 200,150 100,150"
+          ],
+          "image": "power_removed.jpg"
+        },
+        {
+          "text": "Unscrew the top-right screw (2 of 4).",
+          "target": "side-panel-screw-top-right",
+          "partName": "top-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,50 1841,50 1841,150 1741,150"
+          ],
+          "image": "substep1.jpg"
+        },
+        {
+          "text": "Unscrew the bottom-right screw (3 of 4).",
+          "target": "side-panel-screw-bottom-right",
+          "partName": "bottom-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,1872 1841,1872 1841,1972 1741,1972"
+          ],
+          "image": "substep2.jpg"
+        },
+        {
+          "text": "Unscrew the bottom-left screw (4 of 4).",
+          "target": "side-panel-screw-bottom-left",
+          "partName": "bottom-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,1872 200,1872 200,1972 100,1972"
+          ],
+          "image": "substep3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Lift off the glass side panel to expose the motherboard.",
+      "substeps": [
+        {
+          "text": "Lift off the glass side panel to expose the motherboard.",
+          "target": "side-panel",
+          "partName": "glass side panel",
+          "hazard": false,
+          "polygons": [
+            "100,3 1841,3 1841,1987 100,1987"
+          ],
+          "image": "screws_removed.jpg",
+          "currentOnly": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Unplug the two power cables from the graphics card and the power supply.",
+      "substeps": [
+        {
+          "text": "Unplug the left power cable from the graphics card and the power supply (1 of 2).",
+          "target": "gpu-power-cable-left",
+          "partName": "left power cable",
+          "hazard": false,
+          "polygons": [
+            "1065,1045 1135,1045 1135,1120 1065,1120",
+            "800,1690 880,1690 880,1760 800,1760"
+          ],
+          "image": "panel_removed.jpg"
+        },
+        {
+          "text": "Unplug the right power cable from the graphics card and the power supply (2 of 2).",
+          "target": "gpu-power-cable-right",
+          "partName": "right power cable",
+          "hazard": false,
+          "polygons": [
+            "1145,1040 1230,1040 1230,1120 1145,1120",
+            "800,1790 880,1790 880,1860 800,1860"
+          ],
+          "image": "panel_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Press the two plastic latches at the rear end of the graphics card to release it.",
+      "substeps": [
+        {
+          "text": "Press the top latch at the rear end of the graphics card (1 of 2).",
+          "target": "gpu-latch-top",
+          "partName": "top graphics card latch",
+          "hazard": false,
+          "polygons": [
+            "160,1040 230,1040 230,1100 160,1100"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        },
+        {
+          "text": "Press the bottom latch at the rear end of the graphics card (2 of 2).",
+          "target": "gpu-latch-bottom",
+          "partName": "bottom graphics card latch",
+          "hazard": false,
+          "polygons": [
+            "160,1115 230,1115 230,1175 160,1175"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Click the old graphics card to remove it from the slot.",
+      "substeps": [
+        {
+          "text": "Click the old graphics card to remove it from the slot.",
+          "target": "old-gpu",
+          "partName": "old graphics card",
+          "hazard": false,
+          "polygons": [
+            "150,1030 1270,1030 1270,1190 150,1190"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Click the graphics card slot to place a new graphics card in the slot.",
+      "substeps": [
+        {
+          "text": "Click the graphics card slot to place a new graphics card in the slot.",
+          "target": "gpu-slot",
+          "partName": "graphics card slot",
+          "hazard": false,
+          "polygons": [
+            "380,1130 790,1130 790,1200 380,1200"
+          ],
+          "image": "gpu_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Press the two plastic latches at the rear end of the graphics card to lock the new card.",
+      "substeps": [
+        {
+          "text": "Press the bottom latch at the rear end of the graphics card (1 of 2).",
+          "target": "gpu-latch-bottom",
+          "partName": "bottom graphics card latch",
+          "hazard": false,
+          "polygons": [
+            "160,1115 230,1115 230,1175 160,1175"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        },
+        {
+          "text": "Press the top latch at the rear end of the graphics card (2 of 2).",
+          "target": "gpu-latch-top",
+          "partName": "top graphics card latch",
+          "hazard": false,
+          "polygons": [
+            "160,1040 230,1040 230,1100 160,1100"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Plug the two power cables into the graphics card and the power supply.",
+      "substeps": [
+        {
+          "text": "Plug the left power cable into the graphics card and the power supply (1 of 2).",
+          "target": "gpu-power-cable-left",
+          "partName": "left power cable",
+          "hazard": false,
+          "polygons": [
+            "1065,1045 1135,1045 1135,1120 1065,1120",
+            "800,1690 880,1690 880,1760 800,1760"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        },
+        {
+          "text": "Plug the right power cable into the graphics card and the power supply (2 of 2).",
+          "target": "gpu-power-cable-right",
+          "partName": "right power cable",
+          "hazard": false,
+          "polygons": [
+            "1145,1040 1230,1040 1230,1120 1145,1120",
+            "800,1790 880,1790 880,1860 800,1860"
+          ],
+          "image": "gpu_cables_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Click the glass side panel back into place.",
+      "substeps": [
+        {
+          "text": "Click the glass side panel back into place.",
+          "target": "side-panel",
+          "partName": "glass side panel",
+          "hazard": false,
+          "polygons": [
+            "100,3 1841,3 1841,1987 100,1987"
+          ],
+          "image": "panel_removed.jpg",
+          "currentOnly": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Screw the four screws at the corners of the glass side panel.",
+      "substeps": [
+        {
+          "text": "Screw the bottom-left screw (1 of 4).",
+          "target": "side-panel-screw-bottom-left",
+          "partName": "bottom-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,1872 200,1872 200,1972 100,1972"
+          ],
+          "image": "screws_removed.jpg"
+        },
+        {
+          "text": "Screw the bottom-right screw (2 of 4).",
+          "target": "side-panel-screw-bottom-right",
+          "partName": "bottom-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,1872 1841,1872 1841,1972 1741,1972"
+          ],
+          "image": "substep3.jpg"
+        },
+        {
+          "text": "Screw the top-right screw (3 of 4).",
+          "target": "side-panel-screw-top-right",
+          "partName": "top-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,50 1841,50 1841,150 1741,150"
+          ],
+          "image": "substep2.jpg"
+        },
+        {
+          "text": "Screw the top-left screw (4 of 4).",
+          "target": "side-panel-screw-top-left",
+          "partName": "top-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,50 200,50 200,150 100,150"
+          ],
+          "image": "substep1.jpg"
+        }
+      ]
+    }
+  ]
+}

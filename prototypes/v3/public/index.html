@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Step at a Time</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="mode-manual">
+  <main id="mainMenu" class="main-menu" aria-labelledby="menuHeading">
+    <div class="menu-content">
+      <h1 id="menuHeading" tabindex="-1">One Step at a Time</h1>
+      <p class="menu-intro">Follow a computer maintenance procedure using either a Manual or an Interactive guide.</p>
+      <ol class="menu-instructions">
+        <li>Choose a procedure below.</li>
+        <li>Select Manual or Interactive guide, then press Start.</li>
+        <li>Read the instructions on the left and click the parts in the hardware photo on the right.</li>
+        <li>Use Pause to take a break, or End run to stop. Return here when your run is finished.</li>
+      </ol>
+      <div class="procedure-cards">
+        <button type="button" class="procedure-card" data-procedure="procedures/ram.json"><span>Replace RAM</span><small>Remove the old memory and install replacement RAM.</small></button>
+        <button type="button" class="procedure-card" data-procedure="procedures/gpu.json"><span>Replace graphics card</span><small>Remove the old graphics card and install a replacement.</small></button>
+      </div>
+      <p id="menuStatus" role="status" aria-live="polite"></p>
+      <button id="menuExportBtn" type="button" disabled>Export log</button>
+      <p class="menu-note">Logs stay available while this page remains open. Export them before refreshing or closing the page.</p>
+    </div>
+  </main>
+  <div id="workspace" class="workspace" hidden>
+
+    <!-- Top bar: title and the two conditions. Tabs are locked while a run is active. -->
+    <header class="topbar">
+      <h1 id="procedureHeading" tabindex="-1">One Step at a Time</h1>
+      <nav class="tabs" role="tablist" aria-label="Instruction format">
+        <button id="tabManual" class="tab" role="tab" data-mode="manual" aria-selected="true">Manual</button>
+        <button id="tabGuide" class="tab" role="tab" data-mode="guide" aria-selected="false">Interactive guide</button>
+      </nav>
+      <button id="menuBtn" type="button">Main menu</button>
+      <p id="tabHint" class="tab-hint"></p>
+    </header>
+
+    <div class="layout">
+
+      <!-- LEFT: instructions. Nothing on this side advances the procedure. -->
+      <section class="panel instructions-side" aria-labelledby="leftTitle">
+        <h2 id="leftTitle" class="panel-title">
+          <span class="manual-only">INSTRUCTIONS</span>
+          <span class="guide-only">GUIDE</span>
+        </h2>
+
+        <!-- Manual condition: plain text of all steps, no progress state. -->
+        <div id="manualView" class="manual-view manual-only">
+          <p id="manualPlaceholder" class="placeholder">Press Start to show the instructions.</p>
+          <ol id="manualList" class="manual-list" hidden></ol>
+        </div>
+
+        <p id="guidePlaceholder" class="placeholder guide-only">Press Start to show the instructions.</p>
+
+        <!-- Interactive guide condition: task list + highlighted (not clickable) photo. -->
+        <div id="guideView" class="guide-view guide-only">
+          <section id="taskListPanel" class="task-list-panel" aria-labelledby="taskListTitle" hidden>
+            <h3 id="taskListTitle">Task list</h3>
+            <p id="taskListProgress" role="status" aria-live="polite"></p>
+            <ol id="taskList" class="task-list"></ol>
+          </section>
+          <div class="guide-main">
+            <div id="guideBox" class="scene-box">
+              <div id="guideScene" class="scene guide-scene">
+                <img id="guideImg" src="images/full_case.jpg" alt="Guide photo with the target part highlighted" draggable="false" />
+                <svg id="guideOverlay" viewBox="0 0 2016 2112" preserveAspectRatio="none" aria-hidden="true">
+                  <g id="guideAreas"></g>
+                </svg>
+              </div>
+            </div>
+            <p id="instruction" class="instruction" aria-live="polite">Press Start to begin.</p>
+          </div>
+        </div>
+
+        <!-- Short orientation captions. Edit the wording here. -->
+        <p class="panel-caption manual-only">Read the steps here. You cannot click this side.</p>
+        <p class="panel-caption guide-only">The highlighted part shows what to do. You cannot click this side.</p>
+      </section>
+
+      <!-- RIGHT: hardware simulation, identical in both tabs, never highlighted. -->
+      <section class="panel hardware-side" aria-labelledby="rightTitle">
+        <h2 id="rightTitle" class="panel-title">HARDWARE</h2>
+        <div id="hardwareBox" class="scene-box">
+          <div id="hardwareScene" class="scene task-area">
+            <img id="machine" src="images/full_case.jpg" alt="Computer case" draggable="false" />
+            <svg id="overlay" viewBox="0 0 2016 2112" preserveAspectRatio="none">
+              <!-- Rebuilt on each substep: photo-sized miss area first, part areas above it. -->
+              <g id="clickAreas"></g>
+            </svg>
+          </div>
+        </div>
+        <p id="feedback" class="feedback"></p>
+        <p class="panel-caption manual-only">Click the correct part here to carry out each step.</p>
+        <p class="panel-caption guide-only">Click the matching part here. It is not highlighted.</p>
+      </section>
+
+      <aside id="secondaryPanel" class="secondary-panel" aria-labelledby="secondaryTitle">
+        <h2 id="secondaryTitle">Secondary task</h2>
+        <p>Keep the level between 40 and 60</p>
+        <p>If it reaches 0, the system overheats and the run stops.</p>
+        <div class="meter-row">
+          <div class="meter-labels"><span>100</span><span>60</span><span>40</span><span>0</span></div>
+          <div id="secondaryMeter" class="meter" role="meter" aria-label="Secondary task level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+            <div class="safe-zone"></div><div id="secondaryPointer" class="meter-pointer"></div>
+          </div>
+          <output id="secondaryValue">50.0</output>
+        </div>
+        <button id="secondaryBtn" type="button" aria-keyshortcuts="Space" disabled>SPACE — Raise level</button>
+        <p>One press = one increase</p><p id="secondaryStatus" role="status">Stopped</p>
+      </aside>
+    </div>
+
+    <section class="controls">
+      <button id="startBtn" disabled>Start</button>
+      <button id="backBtn">Back</button>
+      <button id="pauseBtn">Pause</button>
+      <button id="endBtn" type="button" disabled>End run</button>
+      <button id="exportBtn" disabled>Export log</button>
+    </section>
+  </div>
+
+  <div id="errorWarning" class="error-warning" role="alert" aria-atomic="true" hidden></div>
+
+  <dialog id="hazardDialog" aria-labelledby="hazardTitle" aria-describedby="hazardText">
+    <h2 id="hazardTitle">Safety warning</h2>
+    <p id="hazardText"></p>
+    <button id="hazardDone" type="button">Done</button>
+  </dialog>
+  <dialog id="meltdownDialog" aria-labelledby="meltdownTitle" aria-describedby="meltdownText">
+    <div class="meltdown-content">
+      <h2 id="meltdownTitle">SYSTEM MELTDOWN</h2>
+      <p id="meltdownText">The system overheated and the procedure was stopped.</p>
+      <button id="meltdownMenuBtn" type="button">Return to main menu</button>
+    </div>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>
