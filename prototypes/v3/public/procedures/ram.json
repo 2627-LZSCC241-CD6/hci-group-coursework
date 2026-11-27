@@ -1,0 +1,254 @@
+{
+  "title": "Replace RAM in a PC",
+  "steps": [
+    {
+      "id": 1,
+      "title": "Unplug the power cable from the back of the computer case.",
+      "substeps": [
+        {
+          "text": "Unplug the power cable from the back of the computer case.",
+          "target": "power-cable",
+          "partName": "power cable",
+          "hazard": true,
+          "hazardText": "Static electricity risk. Confirm that precautions are taken.",
+          "polygons": [
+            "0,1725 100,1725 100,1825 0,1825"
+          ],
+          "image": "full_case.jpg"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Unscrew the four screws at the corners of the glass side panel.",
+      "substeps": [
+        {
+          "text": "Unscrew the top-left screw (1 of 4).",
+          "target": "side-panel-screw-top-left",
+          "partName": "top-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,50 200,50 200,150 100,150"
+          ],
+          "image": "power_removed.jpg"
+        },
+        {
+          "text": "Unscrew the top-right screw (2 of 4).",
+          "target": "side-panel-screw-top-right",
+          "partName": "top-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,50 1841,50 1841,150 1741,150"
+          ],
+          "image": "substep1.jpg"
+        },
+        {
+          "text": "Unscrew the bottom-right screw (3 of 4).",
+          "target": "side-panel-screw-bottom-right",
+          "partName": "bottom-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,1872 1841,1872 1841,1972 1741,1972"
+          ],
+          "image": "substep2.jpg"
+        },
+        {
+          "text": "Unscrew the bottom-left screw (4 of 4).",
+          "target": "side-panel-screw-bottom-left",
+          "partName": "bottom-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,1872 200,1872 200,1972 100,1972"
+          ],
+          "image": "substep3.jpg"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Lift off the glass side panel to expose the motherboard.",
+      "substeps": [
+        {
+          "text": "Lift off the glass side panel to expose the motherboard.",
+          "target": "side-panel",
+          "partName": "glass side panel",
+          "hazard": false,
+          "polygons": [
+            "100,3 1841,3 1841,1987 100,1987"
+          ],
+          "image": "screws_removed.jpg",
+          "currentOnly": true
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Press the top plastic clips on the RAM slot to unlock the memory stick.",
+      "substeps": [
+        {
+          "text": "Press the top plastic clips on the RAM slot to unlock the memory stick.",
+          "target": "ram-top-clip",
+          "partName": "top RAM clips",
+          "hazard": false,
+          "polygons": [
+            "945,375 995,375 995,425 945,425",
+            "1010,375 1060,375 1060,425 1010,425"
+          ],
+          "image": "panel_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Press the bottom plastic clips on the RAM slot to fully release the stick.",
+      "substeps": [
+        {
+          "text": "Press the bottom plastic clips on the RAM slot to fully release the stick.",
+          "target": "ram-bottom-clip",
+          "partName": "bottom RAM clips",
+          "hazard": false,
+          "polygons": [
+            "945,900 995,900 995,950 945,950",
+            "1010,900 1060,900 1060,950 1010,950"
+          ],
+          "image": "panel_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Click the old RAM sticks to remove them from the slot.",
+      "substeps": [
+        {
+          "text": "Click the old RAM sticks to remove them from the slot.",
+          "target": "old-ram-stick",
+          "partName": "old RAM sticks",
+          "hazard": false,
+          "polygons": [
+            "945,375 995,375 995,950 945,950",
+            "1010,375 1060,375 1060,950 1010,950"
+          ],
+          "image": "panel_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Click the RAM slots to place a new memory stick in the slot.",
+      "substeps": [
+        {
+          "text": "Click the RAM slots to place a new memory stick in the slot.",
+          "target": "ram-slot",
+          "partName": "RAM slots",
+          "hazard": false,
+          "polygons": [
+            "945,375 995,375 995,950 945,950",
+            "1010,375 1060,375 1060,950 1010,950"
+          ],
+          "image": "no_ram.jpg"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Press the top plastic clips on the RAM slot to lock the new memory stick.",
+      "substeps": [
+        {
+          "text": "Press the top plastic clips on the RAM slot to lock the new memory stick.",
+          "target": "ram-top-clip",
+          "partName": "top RAM clips",
+          "hazard": false,
+          "polygons": [
+            "945,375 995,375 995,425 945,425",
+            "1010,375 1060,375 1060,425 1010,425"
+          ],
+          "image": "panel_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Press the bottom plastic clips on the RAM slot to fully lock the new memory stick.",
+      "substeps": [
+        {
+          "text": "Press the bottom plastic clips on the RAM slot to fully lock the new memory stick.",
+          "target": "ram-bottom-clip",
+          "partName": "bottom RAM clips",
+          "hazard": false,
+          "polygons": [
+            "945,900 995,900 995,950 945,950",
+            "1010,900 1060,900 1060,950 1010,950"
+          ],
+          "image": "panel_removed.jpg"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Click the glass side panel back into place.",
+      "substeps": [
+        {
+          "text": "Click the glass side panel back into place.",
+          "target": "side-panel",
+          "partName": "glass side panel",
+          "hazard": false,
+          "polygons": [
+            "100,3 1841,3 1841,1987 100,1987"
+          ],
+          "image": "panel_removed.jpg",
+          "currentOnly": true
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "Screw the four screws at the corners of the glass side panel.",
+      "substeps": [
+        {
+          "text": "Screw the bottom-left screw (1 of 4).",
+          "target": "side-panel-screw-bottom-left",
+          "partName": "bottom-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,1872 200,1872 200,1972 100,1972"
+          ],
+          "image": "screws_removed.jpg"
+        },
+        {
+          "text": "Screw the bottom-right screw (2 of 4).",
+          "target": "side-panel-screw-bottom-right",
+          "partName": "bottom-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,1872 1841,1872 1841,1972 1741,1972"
+          ],
+          "image": "substep3.jpg"
+        },
+        {
+          "text": "Screw the top-right screw (3 of 4).",
+          "target": "side-panel-screw-top-right",
+          "partName": "top-right screw",
+          "hazard": false,
+          "polygons": [
+            "1741,50 1841,50 1841,150 1741,150"
+          ],
+          "image": "substep2.jpg"
+        },
+        {
+          "text": "Screw the top-left screw (4 of 4).",
+          "target": "side-panel-screw-top-left",
+          "partName": "top-left screw",
+          "hazard": false,
+          "polygons": [
+            "100,50 200,50 200,150 100,150"
+          ],
+          "image": "substep1.jpg"
+        }
+      ]
+    }
+  ],
+  "id": "ram",
+  "imagesDir": "images/",
+  "defaultImage": "full_case.jpg",
+  "completionImage": "power_removed.jpg"
+}
